@@ -17,13 +17,13 @@
     "@fastify/jwt": "^6.7.1",
     "@fastify/static": "^6.10.1",
     "@fastify/websocket": "^8.0.0",
-    "cinnabun": "^0.1.16",
+    "cinnabun": "^0.1.17",
     "esbuild": "^0.17.18",
     "fastify": "^4.17.0",
     "fastify-plugin": "^4.5.0"
   },
   "devDependencies": {
-    "@types/node": "^18.16.2",
+    "@types/node": "^18.16.3",
     "@types/websocket": "^1.0.5"
   }
 }
