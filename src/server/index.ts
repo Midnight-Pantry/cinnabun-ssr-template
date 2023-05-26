@@ -92,6 +92,9 @@ app.listen({ port }, function (err) {
     process.exit(1)
   }
 
-  console.log(`Server is listening on port ${port}`)
-  console.log("http://localhost:3000")
+  log(
+    "FgGreen",
+    `
+Server is listening on port ${port} - http://localhost:3000`
+  )
 })
