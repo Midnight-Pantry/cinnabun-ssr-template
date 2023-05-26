@@ -5,6 +5,8 @@
     "module": "CommonJS",
     "lib": ["ESNext", "DOM"],
     "moduleResolution": "Node",
+    "allowJs": true,
+    "checkJs": true,
     "strict": true,
     "resolveJsonModule": true,
     "isolatedModules": true,

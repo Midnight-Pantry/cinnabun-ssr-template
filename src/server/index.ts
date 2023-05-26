@@ -1,90 +1,43 @@
-import fastify, { FastifyReply, FastifyRequest } from "fastify"
-import jwt from "@fastify/jwt"
-import cookie from "@fastify/cookie"
+import fastify from "fastify"
 import compress from "@fastify/compress"
 import fStatic from "@fastify/static"
-import websocket from "@fastify/websocket"
-import fs from "fs"
 import path from "path"
 
 import { SSR, SSRConfig } from "cinnabun/ssr"
-import { App } from "../App"
 import { Cinnabun } from "cinnabun"
-import { socketHandler } from "./socket"
-import { configureAuthRoutes } from "./auth"
-import { configureChatRoutes } from "./chat"
+import { log } from "../../.cb/logger.js"
+
+import { App } from "../App"
 import { Template } from "../Template"
 
-const USE_STREAMING = true
+const env = process.env.NODE_ENV ?? "development"
 
-declare module "fastify" {
-  export interface FastifyInstance {
-    authenticate: {
-      (request: FastifyRequest, reply: FastifyReply): Promise<void>
-    }
-    verify: {
-      (request: FastifyRequest): Promise<void>
+if (env === "development") {
+  try {
+    log("Dim", "  evaluating application... 🔍")
+    Template(App)
+    log("Dim", "  good to go! ✅")
+  } catch (error) {
+    if ("message" in (error as Error)) {
+      const err = error as Error
+      log(
+        "FgRed",
+        `
+Failed to evaluate application.
+${err.stack}
+`
+      )
+      process.exit(96)
+      //throw new Error("Failed to evaluate app \n" + err.message)
     }
   }
 }
-const rootId = "app"
 
 const port: number = parseInt(process.env.PORT ?? "3000")
-let baseHtml = ""
-
-if (!USE_STREAMING) {
-  // load base html template
-  {
-    fs.readFile(
-      path.resolve(
-        path.resolve(__dirname, ".", "../../dist/public/index.html")
-      ),
-      "utf8",
-      (err: any, indexHtml) => {
-        if (err) {
-          throw new Error(err)
-        }
-        baseHtml = indexHtml
-      }
-    )
-  }
-}
-
 const app = fastify()
 
 //fastify config
 {
-  //https://www.npmjs.com/package/@fastify/jwt
-  app.register(jwt, {
-    secret: "super-secret secret",
-    cookie: {
-      cookieName: "refreshToken",
-      signed: false,
-    },
-    sign: {
-      expiresIn: "30m",
-    },
-  })
-  app.register(cookie)
-  app.decorate(
-    "authenticate",
-    async (request: FastifyRequest, reply: FastifyReply) => {
-      try {
-        await request.jwtVerify()
-      } catch (err) {
-        reply.send(err)
-      }
-    }
-  )
-  app.decorate("verify", async (request: FastifyRequest) => {
-    try {
-      await request.jwtVerify({ onlyCookie: true })
-    } catch (error) {}
-  })
-
-  app.register(websocket, {
-    options: { maxPayload: 1048576 },
-  })
   app.register(compress, { global: false })
   app.register(fStatic, {
     prefix: "/static/",
@@ -93,42 +46,29 @@ const app = fastify()
   app.get("/favicon.ico", (_, res) => {
     res.status(404).send()
   })
-
-  app.register(async function () {
-    app.route({
-      method: "GET",
-      url: "/ws",
-      handler: (_, res) => res.status(400).send(),
-      wsHandler: socketHandler,
-    })
-  })
 }
 
-configureAuthRoutes(app)
-configureChatRoutes(app)
+if (env === "development") {
+  import("../../.cb/sse").then(({ configureSSE }) => configureSSE(app))
+}
 
-app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
+app.get("/*", async (req, res) => {
   const cinnabunInstance = new Cinnabun()
   cinnabunInstance.setServerRequestData({
     path: req.url,
-    data: { user: req.user },
+    data: {},
   })
 
   const config: SSRConfig = {
     cinnabunInstance,
-    stream: USE_STREAMING ? res.raw : undefined,
+    stream: res.raw,
   }
 
-  if (config.stream) {
-    res.header("Content-Type", "text/html").status(200)
-    res.header("Transfer-Encoding", "chunked")
-    res.raw.write("<!DOCTYPE html><html>")
-  }
+  res.header("Content-Type", "text/html").status(200)
+  res.header("Transfer-Encoding", "chunked")
+  res.raw.write("<!DOCTYPE html><html>")
 
-  const { html, componentTree } = await SSR.serverBake(
-    config.stream ? Template(App) : App(),
-    config
-  )
+  const { componentTree } = await SSR.serverBake(Template(App), config)
 
   if (config.stream) {
     res.raw.write(`
@@ -144,26 +84,6 @@ app.get("/*", { onRequest: [app.verify] }, async (req, res) => {
     res.raw.end()
     return
   }
-
-  res
-    .code(200)
-    .header("Content-Type", "text/html; charset=utf-8")
-    .send(
-      baseHtml
-        .replace(
-          `<div id="${rootId}"></div>`,
-          `<div id="${rootId}">${html}</div>`
-        )
-        .replace(
-          `<script id="server-props"></script>`,
-          `<script id="server-props">
-            window.__cbData = {
-              root: document.getElementById('${rootId}'),
-              component: ${JSON.stringify(componentTree)}
-            }
-          </script>`
-        )
-    )
 })
 
 app.listen({ port }, function (err) {
