@@ -3,10 +3,15 @@ import { Hydration } from "cinnabun/hydration"
 import { Template } from "../Template"
 import { SSRProps } from "cinnabun/src/types"
 import { App } from "../App"
+
 const env = process.env.NODE_ENV ?? "development"
 
 if ("__cbData" in window) {
-  Hydration.hydrate(Template(App), window.__cbData as SSRProps)
+  try {
+    Hydration.hydrate(Template(App), window.__cbData as SSRProps)
+  } catch (error) {
+    console.error(error)
+  }
 
   if (env === "development") {
     const evtHandler = new EventSource("/sse")

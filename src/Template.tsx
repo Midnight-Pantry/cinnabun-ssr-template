@@ -11,7 +11,7 @@ export const Template = (App: { (): GenericComponent }) => {
         <link rel="stylesheet" href="/static/index.css" />
       </head>
 
-      <body style={{ background: "#222", color: "#eee" }}>
+      <body>
         <div id="app">
           <App />
         </div>

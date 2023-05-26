@@ -13,24 +13,26 @@ import { Template } from "../Template"
 const env = process.env.NODE_ENV ?? "development"
 
 if (env === "development") {
-  try {
-    log("Dim", "  evaluating application... 🔍")
-    Template(App)
-    log("Dim", "  good to go! ✅")
-  } catch (error) {
-    if ("message" in (error as Error)) {
-      const err = error as Error
-      log(
-        "FgRed",
-        `
-Failed to evaluate application.
-${err.stack}
-`
-      )
-      process.exit(96)
-      //throw new Error("Failed to evaluate app \n" + err.message)
+  ;(async () => {
+    try {
+      log("Dim", "  evaluating application... 🔍")
+      const cinnabunInstance = new Cinnabun()
+      await SSR.serverBake(Template(App), { cinnabunInstance })
+      log("Dim", "  good to go! ✅")
+    } catch (error) {
+      if ("message" in (error as Error)) {
+        const err = error as Error
+        log(
+          "FgRed",
+          `
+  Failed to evaluate application.
+  ${err.stack}
+  `
+        )
+        process.exit(96)
+      }
     }
-  }
+  })()
 }
 
 const port: number = parseInt(process.env.PORT ?? "3000")
@@ -92,9 +94,6 @@ app.listen({ port }, function (err) {
     process.exit(1)
   }
 
-  log(
-    "FgGreen",
-    `
-Server is listening on port ${port} - http://localhost:3000`
-  )
+  console.log(`Server is listening on port ${port}`)
+  console.log("http://localhost:3000")
 })
