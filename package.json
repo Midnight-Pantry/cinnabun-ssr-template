@@ -16,12 +16,12 @@
   "dependencies": {
     "@fastify/compress": "^6.4.0",
     "@fastify/static": "^6.10.2",
-    "cinnabun": "^0.1.24",
+    "cinnabun": "^0.1.26",
     "esbuild": "^0.17.19",
     "fastify": "^4.17.0",
     "tree-kill": "^1.2.2"
   },
   "devDependencies": {
-    "@types/node": "^18.16.15"
+    "@types/node": "^18.16.16"
   }
 }
