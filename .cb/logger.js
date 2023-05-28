@@ -1,6 +1,6 @@
 const formats = {
   Reset: "\x1b[0m",
-  Bold: "\033[1m",
+  Bold: "\x1b[1m",
   Bright: "\x1b[1m",
   Dim: "\x1b[2m",
   Underscore: "\x1b[4m",
@@ -27,26 +27,24 @@ const formats = {
   BgGray: "\x1b[100m",
 }
 
-module.exports = {
-  /**
-   * @param {keyof typeof formats} format
-   * @param {*} text
-   */
-  log(format, text) {
-    console.log(formats[format] + "%s" + formats["Reset"], text)
-  },
-  /**
-   * @param {keyof typeof formats} format
-   * @param {*} text
-   */
-  err(format, text) {
-    console.error(formats[format] + "%s" + formats["Reset"], text)
-  },
-  /**
-   * @param {keyof typeof formats} format
-   * * @param {*} [text]
-   */
-  fmt(format, text) {
-    return formats[format] + text ?? "%s" + formats["Reset"]
-  },
+/**
+ * @param {keyof typeof formats} format
+ * @param {*} text
+ */
+export function log(format, text) {
+  console.log(formats[format] + "%s" + formats["Reset"], text)
+}
+/**
+ * @param {keyof typeof formats} format
+ * @param {*} text
+ */
+export function err(format, text) {
+  console.error(formats[format] + "%s" + formats["Reset"], text)
+}
+/**
+ * @param {keyof typeof formats} format
+ * * @param {*} [text]
+ */
+export function fmt(format, text) {
+  return formats[format] + text ?? "%s" + formats["Reset"]
 }

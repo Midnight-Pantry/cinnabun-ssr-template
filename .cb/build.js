@@ -1,10 +1,10 @@
-const esbuild = require("esbuild")
-const kill = require("tree-kill")
-const { log, fmt } = require("./logger.js")
+import esbuild from "esbuild"
+import kill from "tree-kill"
+import { log, fmt } from "./logger.js"
 
-const { exec, ChildProcess } = require("node:child_process")
-const EventEmitter = require("events")
-const { regexPatterns, replaceServerFunctions } = require("./transform.plugin")
+import { exec, ChildProcess } from "node:child_process"
+import EventEmitter from "events"
+import { regexPatterns, replaceServerFunctions } from "./transform.plugin.js"
 
 function getArgs() {
   return {
@@ -61,7 +61,7 @@ emitter.on("build-finished", () => {
 const sharedSettings = {
   bundle: true,
   minify: true,
-  format: "cjs",
+  format: "esm",
   target: "esnext",
   tsconfig: ".cb/_tsconfig.json",
   jsx: "transform",
@@ -69,6 +69,7 @@ const sharedSettings = {
   jsxFragment: "Cinnabun.fragment",
   jsxImportSource: "Cinnabun",
   sourcemap: "linked",
+  splitting: true,
   define: { ...envVars },
 }
 
@@ -102,6 +103,9 @@ const serverCfg = {
   outdir: "dist/server",
   platform: "node",
   ...sharedSettings,
+  banner: {
+    js: "import { createRequire } from 'module'; const require = createRequire(import.meta.url);",
+  },
   plugins: [
     {
       name: "build-evts",
