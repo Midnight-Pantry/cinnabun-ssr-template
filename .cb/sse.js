@@ -7,7 +7,6 @@
 let clients = []
 
 /**
- *
  * @param {import("fastify").FastifyRequest} req
  * @param {import("fastify").FastifyReply} reply
  */
@@ -18,9 +17,7 @@ function eventsHandler(req, reply) {
     "Cache-Control": "no-cache",
   }
   reply.raw.writeHead(200, headers)
-  reply.raw.write(
-    `event:handshake\ndata: ${new Date().toLocaleTimeString()}\n\n`
-  )
+  reply.raw.write(`event:handshake\ndata: ${new Date().toLocaleTimeString()}\n\n`)
 
   const clientId = req.id
   const newClient = {

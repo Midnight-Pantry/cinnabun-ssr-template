@@ -1,4 +1,8 @@
-lockfileVersion: '6.0'
+lockfileVersion: '6.1'
+
+settings:
+  autoInstallPeers: true
+  excludeLinksFromLockfile: false
 
 dependencies:
   '@fastify/compress':
@@ -8,8 +12,8 @@ dependencies:
     specifier: ^6.10.2
     version: 6.10.2
   cinnabun:
-    specifier: ^0.1.26
-    version: 0.1.26
+    specifier: ^0.1.29
+    version: 0.1.29
   esbuild:
     specifier: ^0.17.19
     version: 0.17.19
@@ -255,8 +259,8 @@ packages:
     resolution: {integrity: sha512-J8TOSBq3SoZbDhM9+R/u77hP93gz/rajSA+K2kGyijPpORPWUXHUpTaleoj+92As0S9uPRP7Oi8IqMf0u+ro6A==}
     dev: false
 
-  /@fastify/error@3.2.0:
-    resolution: {integrity: sha512-KAfcLa+CnknwVi5fWogrLXgidLic+GXnLjijXdpl8pvkvbXU5BGa37iZO9FGvsh9ZL4y+oFi5cbHBm5UOG+dmQ==}
+  /@fastify/error@3.2.1:
+    resolution: {integrity: sha512-scZVbcpPNWw/yyFmzzO7cf1daTeJp53spN2n7dBTHZd+cV7791fcWJCPP1Tfhdbre+8vDiCyQyqqXfQnYMntYQ==}
     dev: false
 
   /@fastify/fast-json-stringify-compiler@4.3.0:
@@ -371,8 +375,8 @@ packages:
       ieee754: 1.2.1
     dev: false
 
-  /cinnabun@0.1.26:
-    resolution: {integrity: sha512-AqZKtFEIXxQhmHdSlF6aZroZPRUSvhK/u+/dsitR68HquKAtr5/hcS9Hkq9+xt3xgERTr58ldfqvE+wCDN8CrQ==}
+  /cinnabun@0.1.29:
+    resolution: {integrity: sha512-UTjVGTqoSvmxtRMV9/ZW52j9NaT+1eblMvULTKE7jdbehIajs6R6IsVXeaX9yIKd9gejyEcjbdf86uPA0Gjr0Q==}
     dev: false
 
   /content-disposition@0.5.4:
@@ -522,7 +526,7 @@ packages:
     resolution: {integrity: sha512-tzuY1tgWJo2Y6qEKwmLhFvACUmr68Io2pqP/sDKU71KRM6A6R3DrCDqLGqANbeLZcKUfdfY58ut35CGqemcTgg==}
     dependencies:
       '@fastify/ajv-compiler': 3.5.0
-      '@fastify/error': 3.2.0
+      '@fastify/error': 3.2.1
       '@fastify/fast-json-stringify-compiler': 4.3.0
       abstract-logging: 2.0.1
       avvio: 8.2.1
