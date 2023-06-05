@@ -4,7 +4,7 @@ import fStatic from "@fastify/static"
 import path from "path"
 import { fileURLToPath } from "url"
 
-import { SSR, SSRConfig } from "cinnabun/ssr"
+import { SSR } from "cinnabun/ssr"
 import { Cinnabun } from "cinnabun"
 import { log } from "../../.cb/logger.js"
 
@@ -16,8 +16,7 @@ const isDev = process.env.NODE_ENV === "development"
 if (isDev) {
   try {
     log("Dim", "  evaluating application... 🔍")
-    const cinnabunInstance = new Cinnabun()
-    await SSR.serverBake(Template(App), { cinnabunInstance })
+    await SSR.serverBake(Template(App), { cinnabunInstance: new Cinnabun() })
     log("Dim", "  good to go! ✅")
   } catch (error) {
     if ("message" in (error as Error)) {
@@ -41,17 +40,13 @@ const app = fastify()
 app.register(compress, { global: false })
 app.register(fStatic, {
   prefix: "/static/",
-  root: path.join(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "../../dist/static"
-  ),
+  root: path.join(path.dirname(fileURLToPath(import.meta.url)), "../../dist/static"),
 })
 app.get("/favicon.ico", (_, res) => {
   res.status(404).send()
 })
 
-if (isDev)
-  await import("../../.cb/sse").then(({ configureSSE }) => configureSSE(app))
+if (isDev) await import("../../.cb/sse").then(({ configureSSE }) => configureSSE(app))
 
 app.get("/*", async (req, res) => {
   const cinnabunInstance = new Cinnabun()
@@ -60,16 +55,17 @@ app.get("/*", async (req, res) => {
     data: {},
   })
 
-  const config: SSRConfig = {
-    cinnabunInstance,
-    stream: res.raw,
-  }
+  res.headers({
+    "Content-Type": "text/html",
+    "Transfer-Encoding": "chunked",
+  })
 
-  res.header("Content-Type", "text/html").status(200)
-  res.header("Transfer-Encoding", "chunked")
   res.raw.write("<!DOCTYPE html><html>")
 
-  const { componentTree } = await SSR.serverBake(Template(App), config)
+  const { componentTree } = await SSR.serverBake(Template(App), {
+    cinnabunInstance,
+    stream: res.raw,
+  })
 
   res.raw.end(`
     <script id="server-props">
