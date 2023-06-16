@@ -16,7 +16,7 @@ const isDev = process.env.NODE_ENV === "development"
 if (isDev) {
   try {
     log("Dim", "  evaluating application... 🔍")
-    await SSR.serverBake(Template(App), { cinnabunInstance: new Cinnabun() })
+    await SSR.serverBake(Template(App), { cinnabunInstance: new Cinnabun(), stream: null })
     log("Dim", "  good to go! ✅")
   } catch (error) {
     if ("message" in (error as Error)) {
