@@ -62,21 +62,12 @@ app.get("/*", async (req, res) => {
 
   res.raw.write("<!DOCTYPE html><html>")
 
-  const { componentTree } = await SSR.serverBake(Template(App), {
+  await SSR.serverBake(Template(App), {
     cinnabunInstance,
     stream: res.raw,
   })
 
-  res.raw.end(`
-    <script id="server-props">
-      window.__cbData = {
-        root: document.documentElement,
-        component: ${JSON.stringify(componentTree)}
-      }
-    </script>
-    <script src="/static/index.js"></script>
-    </html>
-  `)
+  res.raw.end(`</html>`)
 })
 
 app.listen({ port }, function (err) {
