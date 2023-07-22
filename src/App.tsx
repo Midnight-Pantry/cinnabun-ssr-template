@@ -51,7 +51,10 @@ export const App = () => {
         <a target="_new" href="https://github.com/Midnight-Pantry/cinnabun">
           Github
         </a>
-        <a target="_new" href="https://github.com/Midnight-Pantry/cinnabun/tree/main/apps/components/src">
+        <a
+          target="_new"
+          href="https://github.com/Midnight-Pantry/cinnabun/tree/main/apps/components/src"
+        >
           Component Examples
         </a>
       </footer>
