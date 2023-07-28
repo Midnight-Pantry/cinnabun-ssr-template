@@ -1,4 +1,4 @@
-lockfileVersion: '6.1'
+lockfileVersion: '6.0'
 
 settings:
   autoInstallPeers: true
@@ -12,8 +12,8 @@ dependencies:
     specifier: ^6.10.2
     version: 6.10.2
   cinnabun:
-    specifier: ^0.1.48
-    version: 0.1.48
+    specifier: ^0.1.51
+    version: 0.1.51
   esbuild:
     specifier: ^0.17.19
     version: 0.17.19
@@ -375,8 +375,8 @@ packages:
       ieee754: 1.2.1
     dev: false
 
-  /cinnabun@0.1.48:
-    resolution: {integrity: sha512-U3CePheC6ViPIpkirSTUssPZo1Ppdj7IsJE73apflal21x0ea83boFoHvXZN2XhZIE5cP9RedbZtLr0pIN2RNw==}
+  /cinnabun@0.1.51:
+    resolution: {integrity: sha512-qH1xYbAJTm7UCrLJPkfsFfvHmTyvKcMUhKuTYgGNEi6kPg8uZXzY3/AqZ1dp8REuvTqyhpn8lg1Is3iyGI6T1Q==}
     dev: false
 
   /content-disposition@0.5.4:
