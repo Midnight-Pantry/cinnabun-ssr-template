@@ -1,35 +1,9 @@
 import * as Cinnabun from "cinnabun"
-import { Router, Route, Link } from "cinnabun/router"
-import { Logo } from "./Logo"
-import { createSignal } from "cinnabun"
-import { pathStore } from "./state"
-
-const Navigation = () => (
-  <nav>
-    <ul>
-      <li>
-        <Link to="/" store={pathStore}>
-          Home
-        </Link>
-      </li>
-      <li>
-        <Link to="/counter" store={pathStore}>
-          Counter
-        </Link>
-      </li>
-    </ul>
-  </nav>
-)
-
-const Counter = () => {
-  const count = createSignal(0)
-  return (
-    <>
-      <h2>{count}</h2>
-      <button onclick={() => count.value++}>Click me!</button>
-    </>
-  )
-}
+import { Router, Route } from "cinnabun/router"
+import { Logo } from "./components/Logo"
+import { pathStore } from "./state/state"
+import { Navigation } from "./components/Navigation"
+import { Counter } from "./components/Counter"
 
 export const App = () => {
   return (

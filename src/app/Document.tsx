@@ -1,7 +1,7 @@
 import * as Cinnabun from "cinnabun"
 import { type Component } from "cinnabun"
 
-export const Template = (App: { (): Component }) => {
+export const Document = (App: { (): Component }) => {
   return (
     <>
       <head>
